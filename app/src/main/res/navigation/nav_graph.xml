@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_saveReminderFragment_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment" />
+        <action
+            android:id="@+id/action_saveReminderFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
     <fragment
         android:id="@+id/selectLocationFragment"

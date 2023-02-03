@@ -7,8 +7,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion "29.0.2"
-
+    //buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.udacity.project4"
         minSdkVersion rootProject.minSdkVersion
@@ -121,6 +120,11 @@ dependencies {
     //Maps & Geofencing
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+//firebaseUI
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+
 
 
 }

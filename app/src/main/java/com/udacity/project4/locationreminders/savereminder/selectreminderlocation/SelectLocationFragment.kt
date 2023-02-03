@@ -28,7 +28,8 @@ import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
-
+private const val PERMISSION_CODE_LOCATION_REQUEST = 1
+private const val DEFAULT_ZOOM_LEVEL =15f
 class SelectLocationFragment : BaseFragment() {
 
     //Use Koin to get the view model of the SaveReminder
