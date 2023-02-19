@@ -7,12 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
 import com.udacity.project4.databinding.ActivityReminderDescriptionBinding
+import com.udacity.project4.locationreminders.reminderslist.DescriptionViewModel
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import org.koin.android.ext.android.inject
 
 /**
  * Activity that displays the reminder details after the user clicks on the notification
  */
 class ReminderDescriptionActivity : AppCompatActivity() {
+    val viewModel: DescriptionViewModel by inject()
 
     companion object {
         private const val EXTRA_ReminderDataItem = "EXTRA_ReminderDataItem"
@@ -32,6 +35,20 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             this,
             R.layout.activity_reminder_description
         )
+
+        val reminderData = intent.extras?.get(EXTRA_ReminderDataItem) as ReminderDataItem
+
+        binding.reminder = reminderData
 //        TODO: Add the implementation of the reminder details
+//        binding.edit.setOnClickListener{
+//            val ent = Intent(this, SaveReminderFragment::class.java)
+//            ent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//            ent.putExtra("Id", binding.reminder?.id)
+//            startActivity(ent)
+//        }
+        binding.delete.setOnClickListener{
+            viewModel.deleteReminder(binding.reminder!!)
+            finish()
+        }
     }
 }

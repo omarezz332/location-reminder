@@ -14,12 +14,14 @@ import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
-    val reminderTitle = MutableLiveData<String>()
-    val reminderDescription = MutableLiveData<String>()
-    val reminderSelectedLocationStr = MutableLiveData<String>()
-    val selectedPOI = MutableLiveData<PointOfInterest>()
-    val latitude = MutableLiveData<Double>()
-    val longitude = MutableLiveData<Double>()
+    val reminderTitle = MutableLiveData<String?>()
+    val reminderDescription = MutableLiveData<String?>()
+    val reminderSelectedLocationStr = MutableLiveData<String?>()
+    val selectedPOI = MutableLiveData<PointOfInterest?>()
+    val latitude = MutableLiveData<Double?>()
+    val longitude = MutableLiveData<Double?>()
+    val reminderId = MutableLiveData<String?>()
+    val remindingLocationRange = MutableLiveData(30)
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -31,8 +33,17 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         selectedPOI.value = null
         latitude.value = null
         longitude.value = null
+        reminderId.value=null
     }
 
+    fun editReminder(reminderData: ReminderDataItem){
+        reminderTitle.value = reminderData.title
+        reminderDescription.value = reminderData.description
+        reminderSelectedLocationStr.value = reminderData.location
+        latitude.value = reminderData.latitude
+        longitude.value = reminderData.longitude
+        reminderId.value = reminderData.id
+    }
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */
@@ -69,6 +80,10 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      */
     fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
         if (reminderData.title.isNullOrEmpty()) {
+            showSnackBarInt.value = R.string.err_enter_title
+            return false
+        }
+        if (reminderData.description.isNullOrEmpty()) {
             showSnackBarInt.value = R.string.err_enter_title
             return false
         }
