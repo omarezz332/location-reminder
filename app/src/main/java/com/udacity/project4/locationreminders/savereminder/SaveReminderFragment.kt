@@ -1,6 +1,7 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity.RESULT_OK
 import android.app.PendingIntent
@@ -38,18 +39,19 @@ import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 import java.util.*
 
+@TargetApi(Build.VERSION_CODES.S)
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     private lateinit var launcherLocation: ActivityResultLauncher<IntentSenderRequest>
-    private val geoClient: GeofencingClient by lazy { LocationServices.getGeofencingClient(requireContext())}
+    private lateinit var geoClient: GeofencingClient
     private lateinit var reminderDataItem: ReminderDataItem
     private lateinit var launcherPermissions: ActivityResultLauncher<Array<String>>
     private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(requireActivity(), GeofenceBroadcastReceiver::class.java)
-        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE )
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +59,7 @@ class SaveReminderFragment : BaseFragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_save_reminder, container, false)
+        geoClient = LocationServices.getGeofencingClient(requireActivity())
 
         setDisplayHomeAsUpEnabled(true)
 
