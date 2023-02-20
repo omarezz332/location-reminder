@@ -15,7 +15,6 @@ import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.CoroutineContext
 import android.util.Log
-import com.udacity.project4.authentication.AuthenticationActivity.Companion.TAG
 
 class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
 
@@ -47,7 +46,6 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
             if (geofencingEvent != null) {
                 if (geofencingEvent.hasError()) {
                  //   val errorMessage = errorMessage(this, geofencingEvent.errorCode)
-                    Log.e(TAG, "Geofence errorMessage")
                     return
                 }
             }
