@@ -29,6 +29,7 @@ class RemindersListViewModelTest {
     //TODO: provide testing to the RemindersListViewModel and its live data objects
     private lateinit var remindersListViewModel: RemindersListViewModel
     private lateinit var remindersRepository: FakeDataSource
+    val reminder = ReminderDTO("My hume", "moraa", "Alexandria", 1.454202, 2.599545)
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -78,7 +79,6 @@ class RemindersListViewModelTest {
 
     @Test
     fun loadReminders_checkListNotEmpty() = mainCoroutineRule.runBlockingTest {
-        val reminder = ReminderDTO("My hume", "moraa", "Alexandria", 1.454202, 2.599545)
         remindersRepository.saveReminder(reminder)
         remindersListViewModel.loadReminders()
         Assert.assertThat(
@@ -90,7 +90,6 @@ class RemindersListViewModelTest {
     }
    @Test
     fun loadReminders_deleteAllReminders_ShowNoDataIsTrue()=mainCoroutineRule.runBlockingTest{
-       val reminder = ReminderDTO("My hume", "moraa", "Alexandria", 1.454202, 2.599545)
        remindersRepository.saveReminder(reminder)
        remindersRepository.deleteAllReminders()
        remindersListViewModel.loadReminders()
