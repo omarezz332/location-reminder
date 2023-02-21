@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.data.local
 
+import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -18,6 +19,7 @@ import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Test
+import org.robolectric.annotation.Config
 
 /**
  * testing RemindersDao interface
@@ -31,6 +33,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest
+
 class RemindersDaoTest {
     // testing implementation to the RemindersDao.kt
     private lateinit var database: RemindersDatabase

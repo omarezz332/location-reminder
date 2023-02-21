@@ -27,13 +27,10 @@ import org.robolectric.annotation.Config
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [Build.VERSION_CODES.P])
+//@Config(sdk = [Build.VERSION_CODES.P])
 class SaveReminderViewModelTest {
     private lateinit var saveReminderViewModel: SaveReminderViewModel
     private lateinit var reminderdata: FakeDataSource
-
-    //TODO: provide testing to the SaveReminderView and its live data objects
-
     private val item1 =
         ReminderDataItem("My home", "my place", "Alexandria", 1.454202, 2.599545, "1")
     private val item2 = ReminderDataItem("", "nice place", "cairo", 1.454201, 2.599542, "2")
@@ -59,7 +56,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun ReminderLiveData_onClear() {
+    fun reminderData_ClearAll() {
         saveReminderViewModel.reminderTitle.value = item1.title
         saveReminderViewModel.reminderId.value = item1.id
         saveReminderViewModel.reminderDescription.value = item1.description
@@ -78,7 +75,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun ReminderLiveData_editReminder() {
+    fun reminderData_editReminder() {
         saveReminderViewModel.editReminder(item1)
         Assert.assertThat(saveReminderViewModel.reminderTitle.getOrAwaitValue(), `is`(item1.title))
         Assert.assertThat(saveReminderViewModel.reminderId.getOrAwaitValue(), `is`(item1.id))
@@ -91,7 +88,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun ReminderLiveData_saveReminder() = mainCoroutineRule.runBlockingTest {
+    fun reminderData_saveReminder() = mainCoroutineRule.runBlockingTest {
         saveReminderViewModel.saveReminder(item1)
         val reminder = reminderdata.getReminder("1") as Result.Success
         Assert.assertThat(reminder.data.title, `is`(item1.title))
@@ -102,7 +99,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun ReminderLiveData_validateAndSaveReminder() = mainCoroutineRule.runBlockingTest {
+    fun reminderData_validateAndSaveReminder() = mainCoroutineRule.runBlockingTest {
         val validate=saveReminderViewModel.validateEnteredData(item2)
         Assert.assertThat(validate, `is` (false))
     }
@@ -114,7 +111,7 @@ class SaveReminderViewModelTest {
         Assert.assertThat(valid, `is` (false))
     }
     @Test
-    fun ReminderLiveData_checkLoading() = mainCoroutineRule.runBlockingTest {
+    fun reminderData_checkLoading() = mainCoroutineRule.runBlockingTest {
         mainCoroutineRule.pauseDispatcher()
         saveReminderViewModel.saveReminder(item1)
         Assert.assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(true))
