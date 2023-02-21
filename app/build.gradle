@@ -146,7 +146,7 @@ dependencies {
 
     //Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:7.1.0'
-
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
 
     androidTestImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"

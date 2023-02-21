@@ -1,16 +1,31 @@
 package com.udacity.project4
 
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.google.android.material.internal.ContextUtils.getActivity
+import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.monitorActivity
+import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.`is`
+import org.junit.After
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -18,6 +33,8 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.get
+import androidx.test.espresso.Root
+import org.hamcrest.CoreMatchers.not
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -65,6 +82,81 @@ class RemindersActivityTest :
         }
     }
 
+    private val dataBindingIdlingResource = DataBindingIdlingResource()
+
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().register(dataBindingIdlingResource)
+    }
+
+    /**
+     * Unregister your Idling Resource so it can be garbage collected and does not leak any memory.
+     */
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+    }
+
+    @Test
+    fun showSavedToast(): Unit = runBlocking {
+        // GIVEN - Launch Reminder activity
+        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(scenario)
+        // WHEN - We begin entering information for the reminder.
+        ///click on addReminderButton
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        ///add title and closeKeyboard
+        onView(withId(R.id.reminderTitle)).perform(
+            typeText("My Location On Earth"),
+            closeSoftKeyboard()
+        )
+        ///add Description and closeKeyboard
+        onView(withId(R.id.reminderDescription)).perform(
+            typeText("this is my best choice to live"),
+            closeSoftKeyboard()
+        )
+        ///click on selectLocationButton
+        onView(withId(R.id.selectLocation)).perform(click())
+        onView(withId(R.id.mapFragment)).perform(longClick())
+
+        onView(withId(R.id.save_button)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        // THEN - expect to have a Toast displaying reminder_saved String.
+        //test the Toast
+
+        onView(withText(R.string.reminder_saved)).inRoot(
+            withDecorView(
+                not(
+                    `is`(
+                        getActivity(
+                            getApplicationContext()!!
+                        )?.window?.decorView
+                    )
+                )
+            )
+        )
+            .check(matches(isDisplayed()))
+        scenario.close()
+    }
+
+    @Test
+    fun saveReminderScreen_showSnackBarTitleError(): Unit = runBlocking {
+        // GIVEN - Launch Reminder activity
+        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(scenario)
+        // WHEN - We begin entering information for the reminder.
+        ///click on addReminderButton
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        // THEN - expect to have a Toast displaying error
+        //test the Toast
+
+        val snackBarMessage = appContext.getString(R.string.err_enter_title)
+        onView(withText(snackBarMessage)).check(matches(isDisplayed()))
+        scenario.close()
+    }
 
 
 //    TODO: add End to End testing to the app
