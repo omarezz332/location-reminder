@@ -23,7 +23,6 @@ import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
-//@Config(sdk = [Build.VERSION_CODES.P])
 class RemindersListViewModelTest {
 
     //TODO: provide testing to the RemindersListViewModel and its live data objects

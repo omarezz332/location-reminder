@@ -45,7 +45,6 @@ class RemindersLocalRepositoryTest {
 
     @Before
     fun initial() {
-        // testing with an in-memory database because it won't survive stopping the process
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RemindersDatabase::class.java
@@ -58,9 +57,8 @@ class RemindersLocalRepositoryTest {
     fun cleanUp() {
         database.close()
     }
-    // This function allows us to save a item(reminder) and subsequently retrieve it using its ID.
     @Test
-    fun saveReminderAndRetrievesReminderById() = runBlocking {
+    fun saveReminder_RetrievesReminderById() = runBlocking {
         // GIVEN - A fresh item(reminder) was entered into the database.
         localRepo.saveReminder(item1)
         // WHEN - item(reminder) retrieved by ID.
@@ -74,7 +72,6 @@ class RemindersLocalRepositoryTest {
         assertThat(res.data.longitude, `is`(item1.longitude))
         assertThat(res.data.id, `is`(item1.id))
     }
-    // In this function, we save all of the items(reminders) listed above and then get them all once again.
     @Test
     fun saveRemindersAndRetrievesAllReminders() = runBlocking {
         // GIVEN - A new items(reminders) saved in the database.
@@ -87,7 +84,6 @@ class RemindersLocalRepositoryTest {
         res as Result.Success
         assertThat(res.data.size, `is`(3))
     }
-    // In this function, all items(reminders) are saved before being deleted one by one by Id.
     @Test
     fun saveRemindersAndDeletesOneReminderById() = runBlocking {
         // GIVEN - A new items(reminders) saved in the database.
