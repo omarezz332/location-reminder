@@ -43,11 +43,11 @@ class FakeDataSource(var reminderList: MutableList<ReminderDTO> = mutableListOf(
     }
 
     override suspend fun deleteAllReminders() {
-        reminderList?.clear()
+        reminderList.clear()
     }
 
     override suspend fun delete(id: String) {
-        reminderList?.remove(reminderList?.find {
+        reminderList.remove(reminderList.find {
             it.id == id
         })
 
