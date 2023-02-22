@@ -89,7 +89,22 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setMapLongClick()
         setPoiClick()
         enableLocation()
+        setMapStyle()
     }
+    private fun setMapStyle() {
+        // Customize the styling of the base map using a JSON object defined
+        // in a raw resource file.
+        val success = map.setMapStyle(
+
+            context?.let {
+                MapStyleOptions.loadRawResourceStyle(
+                    it,
+                    R.raw.map_style
+                )
+            }
+        )
+    }
+
 
     private fun setPoiClick() {
         map.setOnPoiClickListener { pio ->
